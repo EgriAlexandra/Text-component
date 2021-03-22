@@ -1,25 +1,45 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Validation from './Components/Validation';
+import Char from './Components/Char';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    textLenght: ""
+  }
+
+  changeHandler = (event) => {
+    this.setState({textLenght : event.target.value});
+  }
+
+  deleteCharHandler = ( index ) => {
+    const text = this.state.textLenght.split('');
+    text.splice(index, 1);
+    const updatedText = text.join('');
+    this.setState({textLenght: updatedText});
+  }
+
+  render() {
+    const charList = this.state.textLenght.split('').map((ch, index) => {
+      return <Char 
+      character={ch} 
+      key={index}
+      clicked={() => this.deleteCharHandler(index)} />
+    });
+
+    return (
+      <div className="App">
+        <input type="text" 
+        onChange={this.changeHandler}
+        value={this.state.textLenght}
+        />
+        <p>Your text: {this.state.textLenght}</p>
+        <Validation inputLength={this.state.textLenght.length}/>
+        {charList}
+      </div>
+    );
+  }
 }
 
 export default App;
+
